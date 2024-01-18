@@ -67,11 +67,11 @@ pipeline {
                 script{
                    withCredentials([string(credentialsId: 'dockerhub-pwd', variable: 'dockerhub')]) {
                    sh 'docker login -u shubhs7007 -p ${dockerhub}'
-
-}
 	           sh 'docker push shubhs7007/spring-boot-app:latest
 	    }
 	}
+    }
+}
        stage("Trivy Scan") {
            steps {
                script {

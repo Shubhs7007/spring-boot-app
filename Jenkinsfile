@@ -4,7 +4,7 @@ pipeline {
         jdk 'Java17'
         maven 'Maven3'
     }
-    environment {
+     environment {
 	    APP_NAME = "spring-boot-app-pipeline"
             RELEASE = "1.0.0"
             sudo DOCKER_USER = "shubhs7007"
@@ -51,7 +51,7 @@ pipeline {
             steps {
                 script {
                     docker.withRegistry('',DOCKER_PASS) {
-                       sudo docker_image = docker.build "${IMAGE_NAME}"
+                       docker_image = docker.build "${IMAGE_NAME}"
                     }
 
                     docker.withRegistry('',DOCKER_PASS) {

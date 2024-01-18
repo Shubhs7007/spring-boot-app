@@ -48,13 +48,12 @@ pipeline {
            }
        }
 
-       stage("Quality Gate"){
+       //stage("Quality Gate"){
            steps {
                script {
                     waitForQualityGate abortPipeline: false, credentialsId: 'Jenkins-Sonarqube-Tokan'
                 }	
             }
-
         }
 	stage("Build & Push Docker Image") {
             steps {

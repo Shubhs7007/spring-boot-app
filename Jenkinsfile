@@ -4,10 +4,10 @@ pipeline {
         jdk 'Java17'
         maven 'Maven3'
     }
-     environment {
+    environment {
 	    APP_NAME = "spring-boot-app-pipeline"
             RELEASE = "1.0.0"
-            sudo DOCKER_USER = "shubhs7007"
+            DOCKER_USER = "shubhs7007"
             DOCKER_PASS = 'dockerhub'
             IMAGE_NAME = "${DOCKER_USER}" + "/" + "${APP_NAME}"
             IMAGE_TAG = "${RELEASE}-${BUILD_NUMBER}"

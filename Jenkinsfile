@@ -58,7 +58,7 @@ pipeline {
         stage('Push image to Hub'){
             steps{
                 script{
-                   withCredentials([string(credentialsId: 'dockerhub-pwd', variable: 'dockerhub')]) {
+                   withCredentials([string(credentialsId: 'dockerhub', variable: 'dockerhub')]) {
                    sh 'docker login -u shubhs7007 -p ${dockerhub}'
 	           sh 'docker push shubhs7007/spring-boot-app:latest'
 	    }

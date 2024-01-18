@@ -6,11 +6,11 @@ pipeline {
     }
     environment {
 	    APP_NAME = "spring-boot-app-pipeline"
-            sudo RELEASE = "1.0.0"
+            RELEASE = "1.0.0"
             sudo DOCKER_USER = "shubhs7007"
-            sudo DOCKER_PASS = 'dockerhub'
-            sudo IMAGE_NAME = "${DOCKER_USER}" + "/" + "${APP_NAME}"
-            sudo IMAGE_TAG = "${RELEASE}-${BUILD_NUMBER}"
+            DOCKER_PASS = 'dockerhub'
+            IMAGE_NAME = "${DOCKER_USER}" + "/" + "${APP_NAME}"
+            IMAGE_TAG = "${RELEASE}-${BUILD_NUMBER}"
     }
     stages{
         stage("Cleanup Workspace"){
@@ -55,8 +55,8 @@ pipeline {
                     }
 
                     docker.withRegistry('',DOCKER_PASS) {
-                       sudo docker_image.push("${IMAGE_TAG}")
-                        sudo docker_image.push('latest')
+                         docker_image.push("${IMAGE_TAG}")
+                         docker_image.push('latest')
 		    }
 		}
 	    }

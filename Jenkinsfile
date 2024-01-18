@@ -55,18 +55,21 @@ pipeline {
             }
 
         }
-	stage("Build & Push Docker Image") {
-            steps {
-                script {
-                    docker.withRegistry('',DOCKER_PASS) {
-                       docker_image = docker.build "${IMAGE_NAME}"
-                    }
+	stage('Build docker image'){
+            steps{
+                script{
+                    sh 'docker build -t spring-boot-app .'
+                }
+            }
+        }
+        stage('Push image to Hub'){
+            steps{
+                script{
+                   withCredentials([string(credentialsId: 'dockerhub-pwd', variable: 'dockerhub')]) {
+                   sh 'docker login -u shubhs7007 -p ${dockerhub}'
 
-                    docker.withRegistry('',DOCKER_PASS) {
-                         docker_image.push("${IMAGE_TAG}")
-                         docker_image.push('latest')
-		    }
-		}
+}
+	           sh 'docker push shubhs7007/spring-boot-app:latest
 	    }
 	}
        stage("Trivy Scan") {

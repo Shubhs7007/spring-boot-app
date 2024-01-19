@@ -9,27 +9,25 @@ $ sudo apt install openjdk-17-jre
 $ java -version
 
 ## Install Jenkins
-Refer--https://www.jenkins.io/doc/book/installing/linux/
-curl -fsSL https://pkg.jenkins.io/debian/jenkins.io-2023.key | sudo tee \
-  /usr/share/keyrings/jenkins-keyring.asc > /dev/null
-echo deb [signed-by=/usr/share/keyrings/jenkins-keyring.asc] \
-  https://pkg.jenkins.io/debian binary/ | sudo tee \
-  /etc/apt/sources.list.d/jenkins.list > /dev/null
-sudo apt-get update
-sudo apt-get install jenkins
-
-$ sudo systemctl enable jenkins       //Enable the Jenkins service to start at boot
-$ sudo systemctl start jenkins        //Start Jenkins as a service
-$ systemctl status jenkins
-$ sudo nano /etc/ssh/sshd_config
-$ sudo service sshd reload
-$ ssh-keygen OR $ ssh-keygen -t ed25519
+apt update -y
+install apche tomcat
+install unzip 
+ unzip apache tomcat
+ goto webapps directorey of apache tomcat 
+ install jenkins
+ cd bin/ ./startup.sh
+ 
+crete a ssh connection jenkins to agent
+ ssh-keygen 
 $ cd .ssh
 
-============================================================= Install and Configure the SonarQube =============================================================
-## Update Package Repository and Upgrade Packages
+Crteate passwd less autjentication
+============================================================= 
+Install and Configure the SonarQube
+=============================================================
+
     $ sudo apt update
-    $ sudo apt upgrade
+   
 ## Add PostgresSQL repository
     $ sudo sh -c 'echo "deb http://apt.postgresql.org/pub/repos/apt $(lsb_release -cs)-pgdg main" > /etc/apt/sources.list.d/pgdg.list'
     $ wget -qO- https://www.postgresql.org/media/keys/ACCC4CF8.asc | sudo tee /etc/apt/trusted.gpg.d/pgdg.asc &>/dev/null
@@ -192,3 +190,4 @@ $ kubectl get nodes
      $ argocd cluster add i-08b9d0ff0409f48e7@virtualtechbox-cluster.ap-south-1.eksctl.io --name virtualtechbox-eks-cluster
 
 13 ) $ kubectl get svc
+

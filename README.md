@@ -21,6 +21,12 @@ crete a ssh connection jenkins to agent
  ssh-keygen 
 $ cd .ssh
 
+### crete a ajenkins agent 
+install java 17
+install docker.io
+start docker 
+
+
 Crteate passwd less autjentication
 ============================================================= 
 Install and Configure the SonarQube
@@ -190,4 +196,98 @@ $ kubectl get nodes
      $ argocd cluster add i-08b9d0ff0409f48e7@virtualtechbox-cluster.ap-south-1.eksctl.io --name virtualtechbox-eks-cluster
 
 13 ) $ kubectl get svc
+
+## deployment yyml 
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: spring-boot-app-deployment
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: spring-boot-app
+  template:
+    metadata:
+      labels:
+        app: spring-boot-app
+    spec:
+      containers:
+        - name: spring-boot-app
+          image: shubhs7007/spring-boot-app-pipeline:1.0.0-5
+          resources:
+            limits:
+              memory: "256Mi"
+              cpu: "500m"
+          ports:
+            - containerPort: 8080
+   ## service yml 
+   apiVersion: v1
+kind: Service
+metadata:
+  name: spring-boot-app-service
+  labels:
+    app: spring-boot-app 
+spec:
+  selector:
+    app: spring-boot-app
+
+  ports:
+    - port: 8080
+      targetPort: 8080
+
+  type: LoadBalancer
+
+  ## create CD pipeline
+  pipeline {
+    agent { label "Jenkins Agent" }
+    environment {
+              APP_NAME = "springboot-app-pipeline"
+    }
+
+    stages {
+        stage("Cleanup Workspace") {
+            steps {
+                cleanWs()
+            }
+        }
+
+        stage("Checkout from SCM") {
+               steps {
+                   git branch: 'main', credentialsId: 'github', url: ' https://github.com/Shubhs7007/gitops-springboot-app'
+               }
+        }
+
+        stage("Update the Deployment Tags") {
+            steps {
+                sh """
+                   cat deployment.yaml
+                   sed -i 's/${APP_NAME}.*/${APP_NAME}:${IMAGE_TAG}/g' deployment.yaml
+                   cat deployment.yaml
+                """
+                 }
+             }
+        }
+}
+
+
+### set up argocd clsuter and sync to app
+![IMG20240119124937](https://github.com/Shubhs7007/spring-boot-app/assets/141384572/cc27af18-b2b5-43e1-8cf3-d76d304cd2b7)
+
+## ci pipeline
+![IMG20240119002315](https://github.com/Shubhs7007/spring-boot-app/assets/141384572/8aefcae5-15ad-4af6-a893-201df384b0d6)
+
+# All infra ec2 instace and EkS cluster
+crete a role for eks server and define virtualbox -3
+![IMG20240119125053](https://github.com/Shubhs7007/spring-boot-app/assets/141384572/dd4741a9-3e4b-48ba-853f-ee8d8576ee26)
+
+# End of outout live project
+![IMG20240119004512](https://github.com/Shubhs7007/spring-boot-app/assets/141384572/577815c0-4067-4fbe-9b92-32817440b371)
+
+### SocrQube code analysis
+![IMG20240119125031](https://github.com/Shubhs7007/spring-boot-app/assets/141384572/b1acdf25-e43c-4c85-9fce-7ca7131c07e0)
+
+
+
+
 

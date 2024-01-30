@@ -1,6 +1,6 @@
 
  ##set jenkins server
- ## Install Java
+Install Java
 $ sudo apt update
 $ sudo apt upgrade
 $ sudo nano /etc/hostname
@@ -27,7 +27,7 @@ install docker.io
 start docker 
 
 
-Crteate passwd less autjentication
+Crteate passwd less authentication
 ============================================================= 
 Install and Configure the SonarQube
 =============================================================
@@ -83,7 +83,7 @@ Install and Configure the SonarQube
      $ sudo groupadd sonar
      $ sudo useradd -c "user to run SonarQube" -d /opt/sonarqube -g sonar sonar
      $ sudo chown sonar:sonar /opt/sonarqube -R
-## Update Sonarqube properties with DB credentials
+   ## Update Sonarqube properties with DB credentials
      $ sudo vim /opt/sonarqube/conf/sonar.properties
      //Find and replace the below values, you might need to add the sonar.jdbc.url
      sonar.jdbc.username=sonar
@@ -151,14 +151,16 @@ $ eksctl version
 
 ## Setup Kubernetes using eksctl
 Refer--https://github.com/aws-samples/eks-workshop/issues/734
-$ eksctl create cluster --name virtualtechbox-cluster \
+$ eksctl create cluster --name virtualtechbox-cluster \                 //define name of my worker node
 --region ap-south-1 \
 --node-type t2.small \
 --nodes 3 \
 
 $ kubectl get nodes
 
-============================================================= ArgoCD Installation on EKS Cluster and Add EKS Cluster to ArgoCD =============================================================
+============================================================= 
+ArgoCD Installation on EKS Cluster and Add EKS Cluster to ArgoCD 
+=============================================================
 1 ) First, create a namespace
     $ kubectl create namespace argocd
 
@@ -184,7 +186,7 @@ $ kubectl get nodes
 
 ## Add EKS Cluster to ArgoCD
 9 ) login to ArgoCD from CLI
-    $ argocd login a2255bb2bb33f438d9addf8840d294c5-785887595.ap-south-1.elb.amazonaws.com --username admin
+    $ argocd login a2255bb2bb33f438d9addf8840d294c5-785887595.ap-south-1.elb.amazonaws.com --username admin and set password
 
 10 ) 
      $ argocd cluster list
@@ -238,11 +240,96 @@ spec:
 
   type: LoadBalancer
 
-  ## create CD pipeline
-  pipeline {
+
+## write CI pipeline 
+pipeline {
+    agent { label 'Jenkins Agent' }
+    tools {
+        jdk 'Java17'
+        maven 'Maven3'
+    }
+    environment {
+	    APP_NAME = "spring-boot-app-pipeline"
+            RELEASE = "1.0.0"
+            DOCKER_USER = "shubhs7007"
+            DOCKER_PASS = 'dockerhub'
+            IMAGE_NAME = "${DOCKER_USER}" + "/" + "${APP_NAME}"              #here i pass environmentaal var for every new code new image
+            IMAGE_TAG = "${RELEASE}-${BUILD_NUMBER}" 
+	    JENKINS_API_TOKEN = credentials("JENKINS_API_TOKEN")
+    }
+    stages{
+        stage("Cleanup Workspace"){
+                steps {
+                cleanWs()
+                }
+        }
+
+        stage("Checkout from SCM"){
+                steps {
+                    git branch: 'main', credentialsId: 'github', url: 'https://github.com/Shubhs7007/spring-boot-app.git'  # here mention repo url
+                }
+        }
+
+        stage("Build Application"){
+            steps {
+                sh "mvn clean package"
+            }
+
+       }
+
+       stage("Test Application"){
+           steps {
+                 sh "mvn test"
+           }
+       }
+
+       stage("SonarQube Analysis"){
+           steps {
+	           script {
+		        withSonarQubeEnv(credentialsId: 'Jenkins-Sonarqube-Tokan') { 
+                        sh "mvn sonar:sonar"
+		        }
+	           }	
+           }
+        }
+        stage("Build & Push Docker Image") {                       ## here first authenticate docker in jenkins agent and define steps push on dockerhub
+            steps {
+                script {
+                    docker.withRegistry('',DOCKER_PASS) {
+                       docker_image = docker.build "${IMAGE_NAME}"
+                    }
+
+                    docker.withRegistry('',DOCKER_PASS) {
+                         docker_image.push("${IMAGE_TAG}")
+                         docker_image.push('latest')
+		    }
+		}
+    }
+}
+       stage("Trivy Scan") {                              # here degine privious build clean workspace
+           steps {
+               script {
+	            sh ('docker run -v /var/run/docker.sock:/var/run/docker.sock aquasec/trivy image shubhs7007/spring-boot-app-pipeline:latest --no-progress --scanners vuln  --exit-code 0 --severity HIGH,CRITICAL --format table')
+                       }    
+               }
+        }
+        stage ('Cleanup Artifacts') {
+           steps {
+               script {
+                    sh "docker rmi ${IMAGE_NAME}:${IMAGE_TAG}"
+                    sh "docker rmi ${IMAGE_NAME}:latest"
+               }
+	   }
+	}
+    }
+}
+
+
+  ## create CD pipeline  
+  pipeline {                                      # here call CD piipeline set upstrean and downstream in jenkins
     agent { label "Jenkins Agent" }
     environment {
-              APP_NAME = "springboot-app-pipeline"
+              APP_NAME = "springboot-app-pipeline"  
     }
 
     stages {
@@ -270,6 +357,13 @@ spec:
         }
 }
 
+in that project i used 
+GitHub - version control
+jenkins - CI/CD implementation
+sonarqube - code qualty
+dockerHub - for new latest image with tag
+argocd tools- for deployment
+EKS cluster- AWS cloud set bootstrap
 
 ### set up argocd clsuter and sync to app
 ![IMG20240119124937](https://github.com/Shubhs7007/spring-boot-app/assets/141384572/cc27af18-b2b5-43e1-8cf3-d76d304cd2b7)

@@ -120,7 +120,7 @@ $ sudo vim /etc/systemd/system/sonar.service
      $ sudo tail -f /opt/sonarqube/logs/sonar.log
 
  # Setup Bootstrap Server for eksctl and Setup Kubernetes using eksctl
- # crete a role for eks server and define virtualbox -3
+ # crete a role for eks server and define name of worker node is virtualbox -3 
 ## Install AWS Cli on the above EC2
 Refer--https://docs.aws.amazon.com/cli/latest/userguide/getting-started-install.html
 $ sudo su

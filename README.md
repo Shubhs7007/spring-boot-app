@@ -199,6 +199,15 @@ ArgoCD Installation on EKS Cluster and Add EKS Cluster to ArgoCD
 
 13 ) $ kubectl get svc
 
+# download helm pkg manager
+curl -fsSL -o get_helm.sh https://raw.githubusercontent.com/helm/helm/master/scripts/get-helm-3
+chmod 700 get_helm.sh
+./get_helm.sh
+helm create spring-boot-app
+define deployment and service yml files in helm charts
+then helm install sprind-boot-app
+now i am varify deployed application
+
 ## deployment yml 
 apiVersion: apps/v1
 kind: Deployment
@@ -379,16 +388,16 @@ EKS cluster- AWS cloud set bootstrap
  ![IMG_20240130_142652](https://github.com/Shubhs7007/spring-boot-app/assets/141384572/be2b08f6-360d-481b-8fc2-bf7d32b2a8b0)
 
 
-# All infra ec2 instace and EkS cluster
+# All infra ec2 instance and EkS cluster created
  
  ![IMG_20240130_141455](https://github.com/Shubhs7007/spring-boot-app/assets/141384572/b60db7bf-175a-47d2-ad01-82d66c9d95c0)
 
 
-# every code push new docker is done and aauto push on dockerHub
+# every code push new docker image is done and aauto push on dockerHub
  ![IMG20240119125231](https://github.com/Shubhs7007/spring-boot-app/assets/141384572/6ffcfd8d-46d5-4e16-b88b-90b8c563b830)
 
 
-### SocrQube code analysis
+### SonarQube code analysis for project
  ![IMG_20240130_142247](https://github.com/Shubhs7007/spring-boot-app/assets/141384572/9e6b9f55-8886-41bc-9e81-39911f8bc4ad)
 
 

@@ -26,11 +26,10 @@ install java 17
 install docker.io
 start docker 
 
-
-Crteate passwd less authentication
-============================================================= 
-Install and Configure the SonarQube
-=============================================================
+Create passwd less authentication
+ 
+## Install and Configure the SonarQube
+ 
 
     $ sudo apt update
    
@@ -120,7 +119,8 @@ $ sudo vim /etc/systemd/system/sonar.service
 ## Watch log files and monitor for startup
      $ sudo tail -f /opt/sonarqube/logs/sonar.log
 
-============================================================= Setup Bootstrap Server for eksctl and Setup Kubernetes using eksctl =============================================================
+ # Setup Bootstrap Server for eksctl and Setup Kubernetes using eksctl
+ # crete a role for eks server and define virtualbox -3
 ## Install AWS Cli on the above EC2
 Refer--https://docs.aws.amazon.com/cli/latest/userguide/getting-started-install.html
 $ sudo su
@@ -199,7 +199,7 @@ ArgoCD Installation on EKS Cluster and Add EKS Cluster to ArgoCD
 
 13 ) $ kubectl get svc
 
-## deployment yyml 
+## deployment yml 
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -223,6 +223,8 @@ spec:
               cpu: "500m"
           ports:
             - containerPort: 8080
+  
+   
    ## service yml 
    apiVersion: v1
 kind: Service
@@ -253,7 +255,7 @@ pipeline {
             RELEASE = "1.0.0"
             DOCKER_USER = "shubhs7007"
             DOCKER_PASS = 'dockerhub'
-            IMAGE_NAME = "${DOCKER_USER}" + "/" + "${APP_NAME}"              #here i pass environmentaal var for every new code new image
+            IMAGE_NAME = "${DOCKER_USER}" + "/" + "${APP_NAME}"              #here i pass environmental var for every new code new image
             IMAGE_TAG = "${RELEASE}-${BUILD_NUMBER}" 
 	    JENKINS_API_TOKEN = credentials("JENKINS_API_TOKEN")
     }
@@ -357,6 +359,8 @@ pipeline {
         }
 }
 
+
+
 in that project i used 
 GitHub - version control
 jenkins - CI/CD implementation
@@ -366,20 +370,34 @@ argocd tools- for deployment
 EKS cluster- AWS cloud set bootstrap
 
 ### set up argocd clsuter and sync to app
-![IMG20240119124937](https://github.com/Shubhs7007/spring-boot-app/assets/141384572/cc27af18-b2b5-43e1-8cf3-d76d304cd2b7)
+![IMG_20240130_142712](https://github.com/Shubhs7007/spring-boot-app/assets/141384572/8fc6f019-63a7-4e51-9b89-e53b21b26cb8)
+![IMG_20240130_142556](https://github.com/Shubhs7007/spring-boot-app/assets/141384572/d42a4d38-64f3-4785-ae8d-6e883f0bb173)
+
+
 
 ## ci pipeline
-![IMG20240119002315](https://github.com/Shubhs7007/spring-boot-app/assets/141384572/8aefcae5-15ad-4af6-a893-201df384b0d6)
+ ![IMG_20240130_142652](https://github.com/Shubhs7007/spring-boot-app/assets/141384572/be2b08f6-360d-481b-8fc2-bf7d32b2a8b0)
+
 
 # All infra ec2 instace and EkS cluster
-crete a role for eks server and define virtualbox -3
-![IMG20240119125053](https://github.com/Shubhs7007/spring-boot-app/assets/141384572/dd4741a9-3e4b-48ba-853f-ee8d8576ee26)
+ 
+ ![IMG_20240130_141455](https://github.com/Shubhs7007/spring-boot-app/assets/141384572/b60db7bf-175a-47d2-ad01-82d66c9d95c0)
 
-# End of outout live project
-![IMG20240119004512](https://github.com/Shubhs7007/spring-boot-app/assets/141384572/577815c0-4067-4fbe-9b92-32817440b371)
+
+# every code push new docker is done and aauto push on dockerHub
+ ![IMG20240119125231](https://github.com/Shubhs7007/spring-boot-app/assets/141384572/6ffcfd8d-46d5-4e16-b88b-90b8c563b830)
+
 
 ### SocrQube code analysis
-![IMG20240119125031](https://github.com/Shubhs7007/spring-boot-app/assets/141384572/b1acdf25-e43c-4c85-9fce-7ca7131c07e0)
+ ![IMG_20240130_142247](https://github.com/Shubhs7007/spring-boot-app/assets/141384572/9e6b9f55-8886-41bc-9e81-39911f8bc4ad)
+
+
+## finial live project 
+ over load balancer dns name i access our project
+ ![IMG_20240130_144137](https://github.com/Shubhs7007/spring-boot-app/assets/141384572/323f6ff2-0f33-45f0-88cf-90781834e4c2)
+
+
+ 
 
 
 
